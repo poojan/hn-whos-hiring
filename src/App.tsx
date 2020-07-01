@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Promise from 'bluebird';
 import './App.css';
-import { Container, Comments } from './App.style';
+import { Container, Comments, Showing } from './App.style';
 import Search from './Search';
 
 interface IPost {
@@ -37,7 +37,7 @@ function App() {
           });
         })
         .then((allPosts: IPost[]) => {
-          const posts = allPosts.filter(post => post && post.text);
+          const posts = allPosts.filter((post) => post && post.text);
           console.log('posts', posts);
 
           setPosts(posts);
@@ -60,16 +60,24 @@ function App() {
       if (!post.text) {
         return false;
       }
-      const part = searchText;
-      return post.text.indexOf(part) !== -1;
-      // return <post className="text indexOf"></post>
+      const parts = searchText
+        .toLowerCase()
+        .split(',')
+        .map((part) => part.trim());
+
+      for (const part of parts) {
+        if (post.text.toLowerCase().indexOf(part) === -1) {
+          return false;
+        }
+      }
+
+      return true;
     });
 
   return (
     <Container>
       <Search search={search} />
-      {' '}
-      Showing: {filteredPosts.length}/{posts.length}
+      <Showing>Showing: {filteredPosts.length}/{posts.length}</Showing>
       <Comments>
         {filteredPosts.map((post: IPost) => (
           <div className='comment pad' key={post.id}>
