@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Promise from 'bluebird';
 import './App.css';
+import { Container } from './App.style';
 
 interface IPost {
   by: string;
@@ -45,13 +46,20 @@ function App() {
   }, []);
 
   return (
-    <div style={{ background: '#f6f6ef', margin: '1px 100px' }}>
-      {posts.filter((post: IPost) => post).map((post: IPost) => (
-        <div className="comment pad" key={post.id}>
-          <span className="commtext c00" dangerouslySetInnerHTML={{ __html: post.text }} />
-        </div>
-      ))}
-    </div>
+    <Container>
+      <div style={{ background: '#f6f6ef', margin: '1px 100px' }}>
+        {posts
+          .filter((post: IPost) => post)
+          .map((post: IPost) => (
+            <div className='comment pad' key={post.id}>
+              <span
+                className='commtext c00'
+                dangerouslySetInnerHTML={{ __html: post.text }}
+              />
+            </div>
+          ))}
+      </div>
+    </Container>
   );
 }
 
