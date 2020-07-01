@@ -9,3 +9,7 @@ export const SearchInput = styled.input`
   box-sizing: border-box;
   padding: 4px;
 `;
+
+export const Note = styled.em`
+  display: block;
+`;

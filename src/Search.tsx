@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, SearchInput } from './Search.style';
+import { Container, SearchInput, Note } from './Search.style';
 
 interface ISearch {
   search: (searchText: string) => void;
@@ -31,7 +31,7 @@ export default function Search({ search }: ISearch) {
         onBlur={onBlurSearchText}
         onKeyDown={onKeyDown}
       />
-      <em>Comma separated values are AND'ed (e.g. remote, c#)</em>
+      <Note>Comma separated values are AND'ed (e.g. remote, c#)</Note>
     </Container>
   );
 }

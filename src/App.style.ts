@@ -9,6 +9,7 @@ export const Comments = styled.div`
 `;
 
 export const Showing = styled.div`
+  max-width: 1214px;
   margin: 4px;
   text-align: right;
 `;
