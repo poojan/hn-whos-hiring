@@ -1,24 +1,56 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import Promise from 'bluebird';
 import './App.css';
 
+interface IPost {
+  by: string;
+  id: number;
+  parent: number;
+  text: string;
+  time: number;
+  type: string;
+}
+
 function App() {
+  const [posts, setPosts] = useState<IPost[]>([]);
+
+  const jsonUrl = 'https://hacker-news.firebaseio.com/v0/item/23702122.json';
+
+  useEffect(() => {
+    const storedPosts = sessionStorage.getItem('posts');
+    console.log('storedPosts', storedPosts);
+
+    if (storedPosts !== null) {
+      setPosts(JSON.parse(storedPosts));
+    } else {
+      fetch(jsonUrl)
+        .then((response) => response.json())
+        .then((json) => {
+          console.log('json', json);
+
+          return Promise.map(json.kids, (kid: string) => {
+            const jsonUrl = `https://hacker-news.firebaseio.com/v0/item/${kid}.json`;
+            return fetch(jsonUrl).then((response) => response.json());
+          });
+        })
+        .then((posts: IPost[]) => {
+          console.log('posts', posts);
+          setPosts(posts);
+          sessionStorage.setItem('posts', JSON.stringify(posts));
+        })
+        .catch((err) => {
+          console.warn(err);
+        });
+    }
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ background: '#f6f6ef', margin: '1px 100px' }}>
+      {posts.filter((post: IPost) => post).map((post: IPost) => (
+        <div className="comment pad" key={post.id}>
+          <span className="commtext c00" dangerouslySetInnerHTML={{ __html: post.text }} />
+        </div>
+      ))}
     </div>
   );
 }
